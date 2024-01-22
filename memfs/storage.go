@@ -235,7 +235,7 @@ func (c *content) ReadAt(b []byte, off int64) (n int, err error) {
 	if len(btr) < len(b) {
 		err = io.EOF
 	}
-	n = copy(b, btr)
+	c.m.RUnlock()
 
 	return
 }
