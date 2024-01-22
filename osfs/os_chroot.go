@@ -6,6 +6,7 @@ package osfs
 import (
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/go-git/go-billy/v5"
 	"github.com/go-git/go-billy/v5/helper/chroot"
@@ -109,4 +110,12 @@ func (fs *ChrootOS) Readlink(link string) (string, error) {
 // Capabilities implements the Capable interface.
 func (fs *ChrootOS) Capabilities() billy.Capability {
 	return billy.DefaultCapabilities
+}
+
+func (fs *ChrootOS) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	return birthTime(fi)
+}
+
+func (fs *ChrootOS) UniqueID(path string, fi os.FileInfo) uint64 {
+	return uniqueID(path, fi)
 }

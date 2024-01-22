@@ -1,5 +1,5 @@
 // Package memfs provides a billy filesystem base on memory.
-package memfs // import "github.com/go-git/go-billy/v5/memfs"
+package memfs // import "gopkg.in/src-d/go-billy.v4/memfs"
 
 import (
 	"errors"
@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync/atomic"
 	"syscall"
 	"time"
 
@@ -18,6 +19,8 @@ import (
 )
 
 const separator = filepath.Separator
+
+var uidCounter atomic.Uint64
 
 // Memory a very convenient filesystem based on memory files
 type Memory struct {
@@ -216,11 +219,13 @@ func (fs *Memory) Capabilities() billy.Capability {
 }
 
 type file struct {
+	uid      uint64
 	name     string
 	content  *content
 	position int64
 	flag     int
 	mode     os.FileMode
+	btime    time.Time
 
 	isClosed bool
 }
@@ -311,10 +316,16 @@ func (f *file) Truncate(size int64) error {
 
 func (f *file) Duplicate(filename string, mode os.FileMode, flag int) billy.File {
 	new := &file{
+		uid:     uidCounter.Add(1),
 		name:    filename,
 		content: f.content,
 		mode:    mode,
 		flag:    flag,
+		btime:   time.Now(),
+	}
+
+	if isAppend(flag) {
+		new.position = int64(new.content.Len())
 	}
 
 	if isTruncate(flag) {
@@ -330,9 +341,11 @@ func (f *file) Duplicate(filename string, mode os.FileMode, flag int) billy.File
 
 func (f *file) Stat() (os.FileInfo, error) {
 	return &fileInfo{
-		name: f.Name(),
-		mode: f.mode,
-		size: f.content.Len(),
+		uid:   f.uid,
+		name:  f.Name(),
+		mode:  f.mode,
+		size:  f.content.Len(),
+		btime: f.btime,
 	}, nil
 }
 
@@ -347,9 +360,11 @@ func (f *file) Unlock() error {
 }
 
 type fileInfo struct {
-	name string
-	size int
-	mode os.FileMode
+	uid   uint64
+	name  string
+	size  int
+	mode  os.FileMode
+	btime time.Time
 }
 
 func (fi *fileInfo) Name() string {
@@ -372,8 +387,8 @@ func (fi *fileInfo) IsDir() bool {
 	return fi.mode.IsDir()
 }
 
-func (*fileInfo) Sys() interface{} {
-	return nil
+func (fi *fileInfo) Sys() interface{} {
+	return fi
 }
 
 func (c *content) Truncate() {
@@ -382,6 +397,22 @@ func (c *content) Truncate() {
 
 func (c *content) Len() int {
 	return len(c.bytes)
+}
+
+func (fs *Memory) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	_fi, ok := fi.Sys().(*fileInfo)
+	if !ok {
+		return false, time.Time{}
+	}
+	return true, _fi.btime
+}
+
+func (fs *Memory) UniqueID(path string, fi os.FileInfo) uint64 {
+	_fi, ok := fi.Sys().(*fileInfo)
+	if !ok {
+		return 0
+	}
+	return _fi.uid
 }
 
 func isCreate(flag int) bool {

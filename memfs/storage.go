@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"time"
 )
 
 type storage struct {
@@ -41,10 +42,12 @@ func (s *storage) New(path string, mode os.FileMode, flag int) (*file, error) {
 	name := filepath.Base(path)
 
 	f := &file{
+		uid:     uidCounter.Add(1),
 		name:    name,
 		content: &content{name: name},
 		mode:    mode,
 		flag:    flag,
+		btime:   time.Now(),
 	}
 
 	s.files[path] = f
@@ -232,7 +235,7 @@ func (c *content) ReadAt(b []byte, off int64) (n int, err error) {
 	if len(btr) < len(b) {
 		err = io.EOF
 	}
-	c.m.RUnlock()
+	n = copy(b, btr)
 
 	return
 }

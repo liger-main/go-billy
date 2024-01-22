@@ -36,3 +36,11 @@ func umask(new int) func() {
 		syscall.Umask(old)
 	}
 }
+
+func uniqueID(path string, fi os.FileInfo) uint64 {
+	stat, ok := fi.Sys().(*syscall.Stat_t)
+	if !ok {
+		return 0
+	}
+	return stat.Ino
+}

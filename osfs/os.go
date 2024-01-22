@@ -9,7 +9,9 @@ import (
 	"io/fs"
 	"os"
 	"sync"
+	"time"
 
+	"github.com/djherbis/times"
 	"github.com/go-git/go-billy/v5"
 )
 
@@ -118,6 +120,14 @@ func openFile(fn string, flag int, perm os.FileMode, createDir func(string) erro
 		return nil, err
 	}
 	return &file{File: f}, err
+}
+
+func birthTime(fi os.FileInfo) (bool, time.Time) {
+	t := times.Get(fi)
+	if t.HasBirthTime() {
+		return true, t.BirthTime()
+	}
+	return false, time.Time{}
 }
 
 // file is a wrapper for an os.File which adds support for file locking.

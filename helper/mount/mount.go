@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"fmt"
 
@@ -170,6 +171,14 @@ func (h *Mount) Underlying() billy.Basic {
 // Capabilities implements the Capable interface.
 func (fs *Mount) Capabilities() billy.Capability {
 	return billy.Capabilities(fs.underlying) & billy.Capabilities(fs.source)
+}
+
+func (fs *Mount) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	return fs.underlying.BirthTime(fi)
+}
+
+func (fs *Mount) UniqueID(path string, fi os.FileInfo) uint64 {
+	return fs.underlying.UniqueID(path, fi)
 }
 
 func (fs *Mount) getBasicAndPath(path string) (billy.Basic, string) {

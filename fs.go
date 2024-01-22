@@ -86,6 +86,10 @@ type Basic interface {
 	// particular, all empty strings are ignored. On Windows, the result is a
 	// UNC path if and only if the first path element is a UNC path.
 	Join(elem ...string) string
+	//
+	BirthTime(fi os.FileInfo) (bool, time.Time)
+	//
+	UniqueID(path string, fi os.FileInfo) uint64
 }
 
 type TempFile interface {
@@ -164,7 +168,7 @@ type File interface {
 	// Name returns the name of the file as presented to Open.
 	Name() string
 	io.Writer
-	// TODO: Add io.WriterAt for v6  
+	// TODO: Add io.WriterAt for v6
 	// io.WriterAt
 	io.Reader
 	io.ReaderAt

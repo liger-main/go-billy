@@ -24,6 +24,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	securejoin "github.com/cyphar/filepath-securejoin"
 	"github.com/go-git/go-billy/v5"
@@ -191,6 +192,14 @@ func (fs *BoundOS) Chroot(path string) (billy.Filesystem, error) {
 // replacement for other upstream implementations (e.g. memory and osfs).
 func (fs *BoundOS) Root() string {
 	return fs.baseDir
+}
+
+func (fs *BoundOS) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	return birthTime(fi)
+}
+
+func (fs *BoundOS) UniqueID(path string, fi os.FileInfo) uint64 {
+	return uniqueID(path, fi)
 }
 
 func (fs *BoundOS) createDir(fullpath string) error {

@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/go-git/go-billy/v5"
 	"github.com/go-git/go-billy/v5/helper/polyfill"
@@ -220,6 +221,14 @@ func (fs *ChrootHelper) Underlying() billy.Basic {
 // Capabilities implements the Capable interface.
 func (fs *ChrootHelper) Capabilities() billy.Capability {
 	return billy.Capabilities(fs.underlying)
+}
+
+func (fs *ChrootHelper) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	return fs.underlying.BirthTime(fi)
+}
+
+func (fs *ChrootHelper) UniqueID(path string, fi os.FileInfo) uint64 {
+	return fs.underlying.UniqueID(path, fi)
 }
 
 type file struct {

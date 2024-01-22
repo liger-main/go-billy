@@ -56,3 +56,32 @@ func umask(new int) func() {
 	return func() {
 	}
 }
+
+func uniqueID(path string, fi os.FileInfo) uint64 {
+	pathp, err := windows.UTF16PtrFromString(path)
+	if err != nil {
+		return 0, err
+	}
+	handle, err := windows.CreateFile(
+		pathp,
+		windows.GENERIC_READ,
+		0,
+		nil,
+		windows.OPEN_EXISTING,
+		0,
+		0,
+	)
+
+	if err != nil {
+		return 0, err
+	}
+	defer windows.CloseHandle(handle)
+
+	var data windows.ByHandleFileInformation
+
+	if err = windows.GetFileInformationByHandle(handle, &data); err != nil {
+		return 0, err
+	}
+
+	return (uint64(data.FileIndexHigh) << 32) | uint64(data.FileIndexLow), nil
+}

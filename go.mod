@@ -5,6 +5,7 @@ go 1.19
 
 require (
 	github.com/cyphar/filepath-securejoin v0.2.4
+	github.com/djherbis/times v1.6.0
 	github.com/onsi/gomega v1.27.10
 	golang.org/x/sys v0.13.0
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c

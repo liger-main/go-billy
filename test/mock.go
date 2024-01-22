@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"time"
 
 	"github.com/go-git/go-billy/v5"
 )
@@ -52,6 +53,14 @@ func (fs *BasicMock) Remove(filename string) error {
 func (fs *BasicMock) Join(elem ...string) string {
 	fs.JoinArgs = append(fs.JoinArgs, elem)
 	return path.Join(elem...)
+}
+
+func (fs *BasicMock) BirthTime(fi os.FileInfo) (bool, time.Time) {
+	panic("not implemented")
+}
+
+func (fs *BasicMock) UniqueID(path string, fi os.FileInfo) uint64 {
+	panic("not implemented")
 }
 
 type TempFileMock struct {
