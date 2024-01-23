@@ -116,6 +116,6 @@ func (fs *ChrootOS) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	return birthTime(fi)
 }
 
-func (fs *ChrootOS) UniqueID(path string, fi os.FileInfo) uint64 {
-	return uniqueID(path, fi)
+func (fs *ChrootOS) ObjectID(path string, fi os.FileInfo) uint64 {
+	return objectID(path, fi)
 }

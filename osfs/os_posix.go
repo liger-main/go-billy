@@ -37,7 +37,7 @@ func umask(new int) func() {
 	}
 }
 
-func uniqueID(path string, fi os.FileInfo) uint64 {
+func objectID(path string, fi os.FileInfo) uint64 {
 	stat, ok := fi.Sys().(*syscall.Stat_t)
 	if !ok {
 		return 0

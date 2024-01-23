@@ -407,7 +407,7 @@ func (fs *Memory) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	return true, _fi.btime
 }
 
-func (fs *Memory) UniqueID(path string, fi os.FileInfo) uint64 {
+func (fs *Memory) ObjectID(path string, fi os.FileInfo) uint64 {
 	_fi, ok := fi.Sys().(*fileInfo)
 	if !ok {
 		return 0

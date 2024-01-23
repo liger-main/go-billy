@@ -59,7 +59,7 @@ func (fs *BasicMock) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	panic("not implemented")
 }
 
-func (fs *BasicMock) UniqueID(path string, fi os.FileInfo) uint64 {
+func (fs *BasicMock) ObjectID(path string, fi os.FileInfo) uint64 {
 	panic("not implemented")
 }
 

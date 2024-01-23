@@ -198,8 +198,8 @@ func (fs *BoundOS) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	return birthTime(fi)
 }
 
-func (fs *BoundOS) UniqueID(path string, fi os.FileInfo) uint64 {
-	return uniqueID(path, fi)
+func (fs *BoundOS) ObjectID(path string, fi os.FileInfo) uint64 {
+	return objectID(path, fi)
 }
 
 func (fs *BoundOS) createDir(fullpath string) error {

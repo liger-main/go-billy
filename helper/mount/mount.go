@@ -177,8 +177,8 @@ func (fs *Mount) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	return fs.underlying.BirthTime(fi)
 }
 
-func (fs *Mount) UniqueID(path string, fi os.FileInfo) uint64 {
-	return fs.underlying.UniqueID(path, fi)
+func (fs *Mount) ObjectID(path string, fi os.FileInfo) uint64 {
+	return fs.underlying.ObjectID(path, fi)
 }
 
 func (fs *Mount) getBasicAndPath(path string) (billy.Basic, string) {

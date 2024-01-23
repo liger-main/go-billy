@@ -89,7 +89,7 @@ type Basic interface {
 	//
 	BirthTime(fi os.FileInfo) (bool, time.Time)
 	//
-	UniqueID(path string, fi os.FileInfo) uint64
+	ObjectID(path string, fi os.FileInfo) uint64
 }
 
 type TempFile interface {

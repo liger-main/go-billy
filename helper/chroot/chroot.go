@@ -227,8 +227,8 @@ func (fs *ChrootHelper) BirthTime(fi os.FileInfo) (bool, time.Time) {
 	return fs.underlying.BirthTime(fi)
 }
 
-func (fs *ChrootHelper) UniqueID(path string, fi os.FileInfo) uint64 {
-	return fs.underlying.UniqueID(path, fi)
+func (fs *ChrootHelper) ObjectID(path string, fi os.FileInfo) uint64 {
+	return fs.underlying.ObjectID(path, fi)
 }
 
 type file struct {

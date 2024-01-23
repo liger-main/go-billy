@@ -57,7 +57,7 @@ func umask(new int) func() {
 	}
 }
 
-func uniqueID(path string, fi os.FileInfo) uint64 {
+func objectID(path string, fi os.FileInfo) uint64 {
 	pathp, err := windows.UTF16PtrFromString(path)
 	if err != nil {
 		return 0, err
